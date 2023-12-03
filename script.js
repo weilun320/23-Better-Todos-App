@@ -1,6 +1,8 @@
 const todoListContainer = document.getElementById("todo-list-container");
 const todoLists = todoListContainer.children[0];
+const dropdownMenu = document.getElementById("dropdown-menu");
 
+// Fetch todos data from API
 async function getTodosData() {
   const response = await fetch(`https://jsonplaceholder.typicode.com/todos`);
   const data = await response.json();
@@ -8,6 +10,7 @@ async function getTodosData() {
   return data;
 }
 
+// Format todos data into HTML
 function formatTodosData(todosData) {
   const formattedTodosData = [];
 
@@ -23,13 +26,37 @@ function formatTodosData(todosData) {
   return formattedTodosData.join("");
 }
 
+// Format user IDs into HTML
+function formatUserIds(todosData) {
+  const userIds = [];
+  const formattedUserIds = [];
+
+  // Check for duplicate user IDs
+  for (const todo of todosData) {
+    if (!userIds.includes(todo.userId)) {
+      userIds.push(todo.userId);
+    }
+  }
+
+  for (const userId of userIds) {
+    formattedUserIds.push(`
+      <li><button class="dropdown-item" onclick="filterUserId(${userId})">User ID: ${userId}</button></li>
+    `);
+  }
+
+  return formattedUserIds.join("");
+}
+
+// Display todos data on the page
 function displayTodos() {
   getTodosData()
   .then((todosData) => {
     data = todosData;
     const formattedTodosData = formatTodosData(todosData);
+    const formattedUserIds = formatUserIds(todosData);
 
     todoLists.innerHTML = formattedTodosData;
+    dropdownMenu.innerHTML = formattedUserIds
   })
   .catch((error) => {
     todoListContainer.innerHTML = `Error fetching todo data`;
