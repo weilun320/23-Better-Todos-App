@@ -99,3 +99,11 @@ function checkCompleted() {
 
   todoLists.innerHTML = formattedTodosData;
 }
+
+// Reset user ID and completed status
+function resetFilter() {
+  id = null;
+  completedCheckbox.checked = false;
+  // Display todos data
+  displayTodos();
+}
