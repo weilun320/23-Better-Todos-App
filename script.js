@@ -1,7 +1,9 @@
 const todoListContainer = document.getElementById("todo-list-container");
 const todoLists = todoListContainer.children[0];
 const dropdownMenu = document.getElementById("dropdown-menu");
+const completedCheckbox = document.getElementById("completed-checkbox");
 let data;
+let id;
 
 // Fetch todos data from API
 async function getTodosData() {
@@ -69,8 +71,31 @@ displayTodos();
 
 // Filter todos data by user ID
 function filterUserId(userId) {
-  const filteredTodosData = data.filter((todo) => todo.userId === userId);
+  let filteredTodosData = data.filter((todo) => todo.userId === userId);
+
+  // Store user ID in global variable to filter completed todos without fetching data from API again
+  id = userId;
+
+  // Check if completed checkbox is checked
+  if (completedCheckbox.checked) {
+    filteredTodosData = filteredTodosData.filter((todo) => todo.completed);
+  }
+  
   const formattedTodosData = formatTodosData(filteredTodosData);
   
+  todoLists.innerHTML = formattedTodosData;
+}
+
+// Filter todos data by completed status
+function checkCompleted() {
+  let completedTodosData = data.filter((todo) => todo.completed === completedCheckbox.checked);
+
+  // Check if user has selected a user ID to be filtered
+  if (id) {
+    completedTodosData = completedTodosData.filter((todo) => todo.userId === id);
+  }
+  
+  const formattedTodosData = formatTodosData(completedTodosData);
+
   todoLists.innerHTML = formattedTodosData;
 }
