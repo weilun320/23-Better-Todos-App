@@ -1,6 +1,7 @@
 const todoListContainer = document.getElementById("todo-list-container");
 const todoLists = todoListContainer.children[0];
 const dropdownMenu = document.getElementById("dropdown-menu");
+let data;
 
 // Fetch todos data from API
 async function getTodosData() {
@@ -51,6 +52,7 @@ function formatUserIds(todosData) {
 function displayTodos() {
   getTodosData()
   .then((todosData) => {
+    // Store todos data in global variable to filter user IDs without fetching data from API again
     data = todosData;
     const formattedTodosData = formatTodosData(todosData);
     const formattedUserIds = formatUserIds(todosData);
@@ -64,3 +66,11 @@ function displayTodos() {
 }
 
 displayTodos();
+
+// Filter todos data by user ID
+function filterUserId(userId) {
+  const filteredTodosData = data.filter((todo) => todo.userId === userId);
+  const formattedTodosData = formatTodosData(filteredTodosData);
+  
+  todoLists.innerHTML = formattedTodosData;
+}
